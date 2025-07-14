@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Meus Contatos - Agenda{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-users"></i> Meus Contatos</h2>
+    <a href="{% url 'contato_create' %}" class="btn btn-success">
+        <i class="fas fa-plus"></i> Novo Contato
+    </a>
+</div>
+
+<!-- Formulário de Busca -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-10">
+                <input type="text" class="form-control" name="search" 
+                       placeholder="Buscar por nome, telefone ou email..." 
+                       value="{{ search }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
+        </form>
+        {% if search %}
+            <div class="mt-2">
+                <small class="text-muted">
+                    Resultados para: "{{ search }}"
+                    <a href="{% url 'contato_list' %}" class="ms-2">
+                        <i class="fas fa-times"></i> Limpar busca
+                    </a>
+                </small>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Lista de Contatos -->
+{% if contatos %}
+    <div class="row">
+        {% for contato in contatos %}
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-user"></i> {{ contato.nome }}
+                        </h5>
+                        <p class="card-text">
+                            <i class="fas fa-phone"></i> {{ contato.telefone }}<br>
+                            <i class="fas fa-envelope"></i> {{ contato.email }}
+                        </p>
+                        <small class="text-muted">
+                            Criado em: {{ contato.criado_em|date:"d/m/Y H:i" }}
+                        </small>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group w-100" role="group">
+                            <a href="{% url 'contato_detail' contato.pk %}" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-eye"></i> Ver
+                            </a>
+                            <a href="{% url 'contato_update' contato.pk %}" class="btn btn-outline-warning btn-sm">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a href="{% url 'contato_delete' contato.pk %}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash"></i> Excluir
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginação -->
+    {% if is_paginated %}
+        <nav aria-label="Navegação de páginas">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if search %}&search={{ search }}{% endif %}">
+                            Primeira
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}">
+                            Anterior
+                        </a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}">
+                            Próxima
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}">
+                            Última
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+
+{% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-address-book fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Nenhum contato encontrado</h4>
+        {% if search %}
+            <p class="text-muted">
+                Nenhum contato corresponde à sua busca por "{{ search }}".
+            </p>
+            <a href="{% url 'contato_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-list"></i> Ver todos os contatos
+            </a>
+        {% else %}
+            <p class="text-muted">
+                Você ainda não tem contatos cadastrados.
+            </p>
+            <a href="{% url 'contato_create' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Adicionar seu primeiro contato
+            </a>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ contato.nome }} - Agenda{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-user"></i> {{ contato.nome }}
+                </h4>
+                <div>
+                    <a href="{% url 'contato_update' contato.pk %}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a href="{% url 'contato_delete' contato.pk %}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Excluir
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-phone text-primary"></i> Telefone</h6>
+                        <p class="mb-3">
+                            <a href="tel:{{ contato.telefone }}" class="text-decoration-none">
+                                {{ contato.telefone }}
+                            </a>
+                        </p>
+                        
+                        <h6><i class="fas fa-envelope text-primary"></i> Email</h6>
+                        <p class="mb-3">
+                            <a href="mailto:{{ contato.email }}" class="text-decoration-none">
+                                {{ contato.email }}
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-calendar-plus text-muted"></i> Criado em</h6>
+                        <p class="mb-3">{{ contato.criado_em|date:"d/m/Y às H:i" }}</p>
+                        
+                        {% if contato.atualizado_em != contato.criado_em %}
+                            <h6><i class="fas fa-calendar-edit text-muted"></i> Última atualização</h6>
+                            <p class="mb-3">{{ contato.atualizado_em|date:"d/m/Y às H:i" }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Ações rápidas -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h6>Ações rápidas:</h6>
+                        <div class="btn-group" role="group">
+                            <a href="tel:{{ contato.telefone }}" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-phone"></i> Ligar
+                            </a>
+                            <a href="mailto:{{ contato.email }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-envelope"></i> Email
+                            </a>
+                            <a href="sms:{{ contato.telefone }}" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-sms"></i> SMS
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'contato_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar para a lista
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

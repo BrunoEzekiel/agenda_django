@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir {{ contato.nome }} - Agenda{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    Tem certeza que deseja excluir o contato 
+                    <strong>{{ contato.nome }}</strong>?
+                </p>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Atenção:</strong> Esta ação não pode ser desfeita.
+                </div>
+                
+                <div class="bg-light p-3 rounded mb-3">
+                    <h6><i class="fas fa-user"></i> {{ contato.nome }}</h6>
+                    <p class="mb-1">
+                        <i class="fas fa-phone"></i> {{ contato.telefone }}
+                    </p>
+                    <p class="mb-0">
+                        <i class="fas fa-envelope"></i> {{ contato.email }}
+                    </p>
+                </div>
+                
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Sim, excluir contato
+                    </button>
+                </form>
+                
+                <a href="{% url 'contato_detail' contato.pk %}" class="btn btn-secondary ms-2">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
