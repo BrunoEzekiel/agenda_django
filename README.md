@@ -207,3 +207,40 @@ A aplicação possui:
 - **Cores harmoniosas** e layout profissional
 - **Responsividade completa** para todos os dispositivos
 - **Feedback visual** com alerts e mensagens
+
+## 🐘 Configuração do PostgreSQL (Local, WSL e Render)
+
+### Ambiente Local/WSL
+- Instale o PostgreSQL no WSL (Ubuntu ou outra distro Linux)
+- Crie o banco e usuário:
+  ```bash
+  sudo -u postgres psql
+  CREATE DATABASE agenda_db;
+  CREATE USER agenda_user WITH PASSWORD 'sua_senha';
+  GRANT ALL PRIVILEGES ON DATABASE agenda_db TO agenda_user;
+  ```
+- Descubra o IP do WSL (no terminal WSL):
+  ```bash
+  hostname -I
+  ```
+- No Windows, defina as variáveis de ambiente antes de rodar o Django:
+  ```powershell
+  $env:DB_NAME="agenda_db"
+  $env:DB_USER="agenda_user"
+  $env:DB_PASSWORD="sua_senha"
+  $env:DB_HOST="IP_DO_WSL"  # Exemplo: 172.20.80.1
+  $env:DB_PORT="5432"
+  python manage.py migrate
+  python manage.py runserver
+  ```
+
+### Deploy no Render
+- No painel do Render, crie um banco PostgreSQL e copie as variáveis de conexão.
+- No Render, adicione as variáveis de ambiente no painel do serviço web:
+  - `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`
+- O settings.py já está pronto para ler essas variáveis automaticamente.
+
+### Dica
+- Nunca coloque senhas ou dados sensíveis diretamente no código.
+- O padrão do settings.py garante que, se as variáveis não existirem, ele tenta rodar localmente.
+- Para produção, sempre defina as variáveis de ambiente corretamente!
